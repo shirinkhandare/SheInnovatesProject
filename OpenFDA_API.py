@@ -1,5 +1,6 @@
 from collections import defaultdict
 import json, os # read json files and load file systems
+from pymongo import MongoClient
 
 MENSTRUATION_TERMS = {
     # menstruation/cycle terms
@@ -27,6 +28,12 @@ MENSTRUATION_TERMS = {
     "Vaginal bleeding", "Uterine contractions"
 }
 
+client = MongoClient("mongodb://localhost:27017/")
+db = client["drug_database"] # database name
+collection = db["menstrual_effects"] # collection name
+
+collection.delete_many({})
+
 DATA_DIR = "data" # data folder where json files are held in 
 MAX_REPORTS_PER_FILE = 10000  # files are too large, program will run extremely slow so just take the first 10000 reports
 drug_effects = defaultdict(set) # store reactions in a set in each drug
@@ -36,7 +43,6 @@ total_files = len(files)  # total number of files to process
 
 
 for file_num, filename in enumerate(files, 1): 
-
     print(f"Reading files... {len(drug_effects)} drugs found")
 
     
@@ -68,22 +74,35 @@ for file_num, filename in enumerate(files, 1):
                     for reaction in reactions:
                         drug_effects[name.upper()].add(reaction)  
 
+documents = []
+for drug, effects in drug_effects.items():
+    documents.append({
+        "drug_name": drug, 
+        "menstrual_effects": sorted(list(effects)),
+        "effect_count": len(effects)
+    })
+
+if documents:
+    collection.insert_many(documents)
+    print(f"Inserted {len(documents)} drug into MongoDB")
+
+client.close() # close connection
 
 # print final count on new line
 # print(f"\rReading files... Complete! {len(drug_effects)} drugs found")
 
 # have to convert set to list to support json files
-drug_effects_dict = {
-    drug: sorted(list(effects))  # turn set into list
-    for drug, effects in drug_effects.items() 
-}
+# drug_effects_dict = {
+#     drug: sorted(list(effects))  # turn set into list
+#     for drug, effects in drug_effects.items() 
+# }
 
 # save to json file for searching database
-with open("drug_menstrual_effects.json", "w", encoding="utf-8") as f: # save json file as f
-    json.dump(drug_effects_dict, f, indent=2) # save the dictionary in f
+# with open("drug_menstrual_effects.json", "w", encoding="utf-8") as f: # save json file as f
+#     json.dump(drug_effects_dict, f, indent=2) # save the dictionary in f
 
 
-# Print final summary
-# print(f"Data saved!")
+# # Print final summary
+# # print(f"Data saved!")
 
-print(json.dumps(drug_effects_dict))
+# print(json.dumps(drug_effects_dict))
