@@ -9,8 +9,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 
-app.get('/home', (req, res) => {//req-Request res-Response
-    res.sendFile(__dirname + '/public/home.html');
+app.get('/index', (req, res) => {//req-Request res-Response
+    res.sendFile(__dirname + '/public/index.html');
 });//if the user goes to the home page, then it will send the file at public/home.html
 
 
@@ -24,8 +24,8 @@ app.get('/searchmed', (req, res)=>{
 });//sends the searchMED.html to the user when they go to the searchMED page
 
 
-app.get('/user', (req, res)=>{
-    res.sendFile(__dirname+'/public/user.html');
+app.get('/profile-page', (req, res)=>{
+    res.sendFile(__dirname+'/public/profile-page.html');
 });
 
 /*Python Bridge*/
