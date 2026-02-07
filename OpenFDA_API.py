@@ -36,6 +36,9 @@ total_files = len(files)  # total number of files to process
 
 
 for file_num, filename in enumerate(files, 1): 
+
+    print(f"Reading files... {len(drug_effects)} drugs found")
+
     
     with open(os.path.join(DATA_DIR, filename), "r", encoding="utf-8") as f: # open and load the json file
         data = json.load(f)  # parse the json file into a dictionary
@@ -66,6 +69,9 @@ for file_num, filename in enumerate(files, 1):
                         drug_effects[name.upper()].add(reaction)  
 
 
+# print final count on new line
+# print(f"\rReading files... Complete! {len(drug_effects)} drugs found")
+
 # have to convert set to list to support json files
 drug_effects_dict = {
     drug: sorted(list(effects))  # turn set into list
@@ -75,5 +81,9 @@ drug_effects_dict = {
 # save to json file for searching database
 with open("drug_menstrual_effects.json", "w", encoding="utf-8") as f: # save json file as f
     json.dump(drug_effects_dict, f, indent=2) # save the dictionary in f
+
+
+# Print final summary
+# print(f"Data saved!")
 
 print(json.dumps(drug_effects_dict))
