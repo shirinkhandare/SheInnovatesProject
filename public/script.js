@@ -149,3 +149,154 @@ nextBtn.addEventListener('click', () => {
 })
 
 updateCalendar();
+
+
+/*===============================================
+  MEDICATION SEARCH & DOSAGE FUNCTIONALITY
+===============================================*/
+
+// Medication data (will be fetched from database)
+let medications = [];
+
+// Dosage modal elements
+const dosageModal = document.getElementById('dosageModal');
+const selectedMedName = document.getElementById('selectedMedName');
+const dosageAmount = document.getElementById('dosageAmount');
+const dosageUnit = document.getElementById('dosageUnit');
+const saveDosageBtn = document.getElementById('saveDosageBtn');
+const medicationSearch = document.getElementById('medicationSearch');
+const searchBtn = document.getElementById('searchBtn');
+const medicationList = document.getElementById('medicationList');
+
+let selectedMedication = null;
+let userMedications = {};
+
+// Fetch medications from MongoDB
+async function fetchMedications() {
+    try {
+        const response = await fetch('http://localhost:5000');
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch medications');
+        }
+        
+        const data = await response.json();
+        medications = data; // Already sorted from backend
+        
+        displayMedications(medications);
+    } catch (error) {
+        console.error('Error fetching medications:', error);
+        medicationList.innerHTML = '<p style="text-align: center; color: #999; padding: 2vh;">Failed to load medications. Please check if the server is running.</p>';
+    }
+}
+
+// Display all medications
+function displayMedications(meds) {
+    medicationList.innerHTML = '';
+    
+    if (meds.length === 0) {
+        medicationList.innerHTML = '<p style="text-align: center; color: #999; padding: 2vh;">No medications found.</p>';
+        return;
+    }
+    
+    meds.forEach(med => {
+        const medItem = document.createElement('div');
+        medItem.className = 'medication-item';
+        medItem.textContent = med;
+        medItem.addEventListener('click', () => openDosageModal(med));
+        medicationList.appendChild(medItem);
+    });
+}
+
+// Open dosage modal
+function openDosageModal(medName) {
+    selectedMedication = medName;
+    selectedMedName.textContent = medName;
+    
+    if (userMedications[medName]) {
+        dosageAmount.value = userMedications[medName].amount;
+        dosageUnit.value = userMedications[medName].unit;
+    } else {
+        dosageAmount.value = '';
+        dosageUnit.value = '';
+    }
+    
+    dosageModal.style.display = 'block';
+}
+
+// Close dosage modal
+function closeDosageModal() {
+    dosageModal.style.display = 'none';
+}
+
+// Save dosage to database
+async function saveDosageToDatabase(medication, amount, unit) {
+    try {
+        const response = await fetch('http://localhost:5000', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                medication: medication,
+                amount: amount,
+                unit: unit,
+                userId: 'current_user_id' // Replace with actual user ID from your auth system
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to save medication');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error saving medication:', error);
+        alert('Failed to save medication. Please try again.');
+    }
+}
+
+// Save dosage
+saveDosageBtn.addEventListener('click', async () => {
+    if (selectedMedication && dosageAmount.value && dosageUnit.value) {
+        userMedications[selectedMedication] = {
+            amount: dosageAmount.value,
+            unit: dosageUnit.value
+        };
+        
+        // Save to database
+        await saveDosageToDatabase(
+            selectedMedication, 
+            dosageAmount.value, 
+            dosageUnit.value
+        );
+        
+        console.log('Medication saved:', selectedMedication, userMedications[selectedMedication]);
+        
+        closeDosageModal();
+    } else {
+        alert('Please fill in all fields');
+    }
+});
+
+// Search functionality
+function searchMedications() {
+    const searchTerm = medicationSearch.value.toLowerCase();
+    const filtered = medications.filter(med => 
+        med.toLowerCase().includes(searchTerm)
+    );
+    displayMedications(filtered);
+}
+
+medicationSearch.addEventListener('input', searchMedications);
+searchBtn.addEventListener('click', searchMedications);
+
+// Close modal when clicking outside
+dosageModal.addEventListener('click', (e) => {
+    if (e.target === dosageModal) {
+        closeDosageModal();
+    }
+});
+
+// Initialize - fetch medications when page loads
+fetchMedications();
