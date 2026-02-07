@@ -43,7 +43,31 @@
     transition: all 0.3s ease;
     font-size: clamp(0.9rem, 2vw, 1rem);
 }
+#addMedication {
+    margin-top: 70px;
+    border-radius: 10px;
+    border: none;
+    padding: 2vh 3vw;
+    background-color: #ff5869;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
 
+#viewMedication {
+    margin-top: 70px;
+    border-radius: 10px;
+    border: none;
+    padding: 2vh 3vw;
+    background-color: #ff5869;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
 #profile-button {
     border-radius: 10px;
     border: none;
@@ -347,20 +371,14 @@
     align-items: center;
     padding: 30 px 20px;
     color: white;
-    line-height: 2;
 }
-
-.profile-pic{
-    max-width: 150px;
-    max-height: 150px;
-}
-.profile-details{
+.user-information{
     width: 40%;
+    background-color: salmon;
     padding: 20px;
+    border: 2px solid black;
     border-radius: 10px;
     text-align: left;
-    line-height: 2;
-    color:white;
 }
 /*Search bar from the SearchMedication page*/
 
