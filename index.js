@@ -3,7 +3,7 @@ const express = require('express');//go into node_mobules and find the express p
 const mongoose = require('mongoose')
 const session = require('express-session')
 const User = require('./models/User')
-require('dotnev').config();
+require('dotenv').config();
 const app = express();//make an instance of express and call it 'app'
 const path= require('path');
 
