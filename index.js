@@ -12,13 +12,13 @@ mongoose.connect(process.env.MONGODB_URI) // connect to mongoDB database
     .catch(err => console.error('MongoDB connection error:', err));
 
     app.use(session({
-        secret: 'Sh3Inn0v@t3s2026!xYz#Pr0j3ct', // encryption key
-        resave: false,
-        saveUninitalized: false,
-        cookie: { 
-            maxAge: 1000 * 60 * 60 * 24
-        }
-    }));
+    secret: 'Sh3Inn0v@t3s2026!xYz#Pr0j3ct',
+    resave: false,
+    saveUninitialized: false, // Fixed typo here
+    cookie: { 
+        maxAge: 1000 * 60 * 60 * 24
+    }
+}));
 
 function isAuthenticated(req, res, next){ // check if user is logged in
     if (req.session.userId){
