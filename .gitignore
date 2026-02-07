@@ -2,3 +2,9 @@ node_modules/
 .DS_Store
 .env
 data/
+*.json
+!package.json
+!package-lock.json
+__pycache__/
+*.pyc
+venv/
