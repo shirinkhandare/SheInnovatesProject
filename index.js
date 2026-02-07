@@ -64,9 +64,12 @@ app.post('/api/register', async (req, res) => {
     try {
         const { username, email, password } = req.body;
         
+        console.log('Registration attempt:', { username, email });
+        
         // check if user already exists
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
+            console.log('User already exists'); // Add this
             return res.status(400).json({ error: 'User already exists' });
         }
         
@@ -74,14 +77,17 @@ app.post('/api/register', async (req, res) => {
         const user = new User({ username, email, password });
         await user.save();
         
+        console.log('User created successfully:', user._id); 
+        
         // log them in automatically
         req.session.userId = user._id;
         req.session.username = user.username;
         
         res.json({ success: true, message: 'Registration successful' });
     } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ error: 'Registration failed' });
+        console.error('Registration error:', error); // 
+        console.error('Error details:', error.message); 
+        res.status(500).json({ error: 'Registration failed: ' + error.message }); 
     }
 });
 

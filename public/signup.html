@@ -6,6 +6,7 @@
 <body>
     <h1>Test Signup Page</h1>
     <div id="error" style="color: red;"></div>
+    <div id="success" style="color: green;"></div>
     <form id="signupForm">
         <input type="text" id="username" placeholder="Username" required minlength="3"><br><br>
         <input type="email" id="email" placeholder="Email" required><br><br>
@@ -17,22 +18,38 @@
     <script>
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            console.log('Form submitted!'); // Check if this appears
+            
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            const response = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
-            });
+            console.log('Form data:', { username, email, passwordLength: password.length });
             
-            const data = await response.json();
-            
-            if (response.ok) {
-                window.location.href = '/mymed';
-            } else {
-                document.getElementById('error').textContent = data.error;
+            try {
+                console.log('Sending request to /api/register...');
+                
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok) {
+                    document.getElementById('success').textContent = 'Registration successful! Redirecting...';
+                    setTimeout(() => window.location.href = '/mymed', 1000);
+                } else {
+                    document.getElementById('error').textContent = data.error || 'Registration failed';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('error').textContent = 'Network error: ' + error.message;
             }
         });
     </script>
