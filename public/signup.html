@@ -43,7 +43,7 @@
                 
                 if (response.ok) {
                     document.getElementById('success').textContent = 'Registration successful! Redirecting...';
-                    setTimeout(() => window.location.href = '/mymed', 1000);
+                    setTimeout(() => window.location.href = '/profile-page', 1000);
                 } else {
                     document.getElementById('error').textContent = data.error || 'Registration failed';
                 }

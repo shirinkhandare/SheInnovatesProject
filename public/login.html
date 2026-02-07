@@ -28,7 +28,7 @@
             const data = await response.json();
             
             if (response.ok) {
-                window.location.href = '/mymed';
+                window.location.href = '/profile-page';
             } else {
                 document.getElementById('error').textContent = data.error;
             }
