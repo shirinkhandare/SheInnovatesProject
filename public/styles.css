@@ -295,3 +295,12 @@
     transform: translateY(0);
 }
     
+/*User Display Info - from profile-page */
+.user-information{
+    width: 40%;
+    background-color: #ff5869;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: left;
+}
