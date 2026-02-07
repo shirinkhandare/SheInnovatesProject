@@ -4,14 +4,12 @@
             
 
     #home-button{
-        position: fixed;
-        top: 16px;
-        left: 16px;
+        display: block;
+        margin: 20 px auto; 
     }
 
     #profile-button{
-        position: fixed;
-        top: 16px;
-        right:16px;
+        display: inline-block;
+        margin-left: 0;
     }
     
