@@ -1,15 +1,70 @@
     body{
         background-color: darksalmon;
+        min-height: 100vh;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+
     }
-            
+
+    .calendar{
+        width:380px;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0);
+    }
+
+    .header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10 px;
+    }
+
+    .header button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 50%;
+        background: #fff;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    }
+
+    .days{
+        display: grid;
+        grid-template-columns: repeat(7,1fr);
+    }
+
+    .day{
+        text-align: center;
+        padding: 5px;
+        color: #999FA6;
+        font-weight: 500;
+    }
+    
+    .button-container {
+        position: relative;            /* for absolute positioning inside container */
+        width: 100%;                   /* full page width */
+        padding: 20px 0;
+        box-sizing: border-box;
+    }
 
     #home-button{
-        display: block;
-        margin: 20 px auto; 
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%)
     }
 
     #profile-button{
-        display: inline-block;
-        margin-left: 0;
+        position: absolute;
+        right: 20 px
     }
     
