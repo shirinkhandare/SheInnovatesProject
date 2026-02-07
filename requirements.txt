@@ -1,0 +1,6 @@
+# Download these Python packages.
+pymongo
+python-dotenv
+flask
+flask-cors
+gdown

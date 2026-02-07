@@ -1,6 +1,9 @@
 from collections import defaultdict
 import json, os # read json files and load file systems
 from pymongo import MongoClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 MENSTRUATION_TERMS = {
     # menstruation/cycle terms
@@ -28,18 +31,18 @@ MENSTRUATION_TERMS = {
     "Vaginal bleeding", "Uterine contractions"
 }
 
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient(os.getenv("MONGODB_URI"))
 db = client["drug_database"] # database name
 collection = db["menstrual_effects"] # collection name
 
 collection.delete_many({})
 
-DATA_DIR = "data" # data folder where json files are held in 
+DATA_DIR = os.getenv("DATA_DIR", "data") # connect to MongoDB Atlas (cloud)
 MAX_REPORTS_PER_FILE = 10000  # files are too large, program will run extremely slow so just take the first 10000 reports
 drug_effects = defaultdict(set) # store reactions in a set in each drug
 
 files = [f for f in os.listdir(DATA_DIR) if f.endswith(".json")] # get list of all json files in the data folder
-total_files = len(files)  # total number of files to process
+# total_files = len(files)  # total number of files to process
 
 
 for file_num, filename in enumerate(files, 1): 
