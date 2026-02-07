@@ -84,7 +84,7 @@ app.post('/api/register', async (req, res) => {
         req.session.username = user.username;
         
         res.json({ success: true, message: 'Registration successful' });
-    } catch (error) {
+        } catch (error) {
         console.error('Registration error:', error); // 
         console.error('Error details:', error.message); 
         res.status(500).json({ error: 'Registration failed: ' + error.message }); 
