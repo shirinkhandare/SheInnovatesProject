@@ -1,17 +1,17 @@
-body{
+    body{
         background-color: darksalmon;
+    }
             
 
-            #home-button{
-                position: fixed;
-                top: 16px;
-                left: 16px;
-
-            }
-
-            #profile-button{
-                position: fixed;
-                top: 16px;
-                right:16px;
-            }
+    #home-button{
+        position: fixed;
+        top: 16px;
+        left: 16px;
     }
+
+    #profile-button{
+        position: fixed;
+        top: 16px;
+        right:16px;
+    }
+    
