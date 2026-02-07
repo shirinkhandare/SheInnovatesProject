@@ -12,75 +12,57 @@ profilebutton.addEventListener('click', ()=>{
 
 
 /*Calendar*/
-document.addEventListener('DOMContentLoaded', function() {
-    const calendarEl = document.getElementById('calendar');
-    const monthJump = document.getElementById('monthJump');
-    const yearJump = document.getElementById('yearJump');
+ const monthYearElement = document.getElementById('monthYear');
+ const dateElement = document.getElementById('dates');
+ const prevBtn = document.getElementById('prev-button');
+ const nextBtn = document.getElementById('next-button');
 
-    // 1. INITIALIZE THE CALENDAR
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: '' // We are using our own dropdowns instead
-        },
-        
-        // This runs whenever the month/year changes (even via arrows)
-        datesSet: function() {
-            const currentViewDate = calendar.getDate();
-            // Sync dropdowns to match the calendar's current view
-            monthJump.value = currentViewDate.getMonth();
-            yearJump.value = currentViewDate.getFullYear();
-        },
+ let currentDate = new Date();
 
-        // Click a date to open the log form
-        dateClick: function(info) {
-            window.currentSelectedDate = info.dateStr;
-            document.getElementById('selectedDateText').innerText = "Log for: " + info.dateStr;
-            document.getElementById('logModal').style.display = 'block';
+ const updateCalendar = () => {
+        const currentYear= currentDate.getFullYear();
+        const currentMonth=currentDate.getMonth();
+
+        const firstDay = new Date(currentYear, currentMonth, 0);
+        const lastDay = new Date(currentYear, currentMonth + 1, 0);
+        const totalDays = lastDay.getDate();
+        const firstDayIndex = firstDay.getDay();
+        const lastDayIndex = lastDay.getDay();
+
+        const monthYearString= currentDate.toLocaleString
+        ('default', {month: 'long', year: 'numeric'});
+        monthYearElement.textContent = monthYearString;
+
+        let datesHTML = '';
+        for( let i = firstDayIndex; i > 0; i--){
+           const prevDate = new Date(currentYear, currentMonth, 0-i + 1);
+           datesHTML +='<div class="date inactive"> ' + prevDate.getDate() + '</div>'; 
         }
-    });
+        for(let i=1; i <= totalDays; i++){
+            const date= new Date(currentYear, currentMonth, i);
+            const activeClass = date.toDateString()===new Date().toDateString() ? 'active' : '';
+            datesHTML += `<div class="date ${activeClass}">${i}</div>`;
+        }
 
-    calendar.render();
+        for(let i=i;  i<=7 - lastDayIndex; i++){
+            const nextDate = new Date(currentYear, currentMonth + 1, i);
+            datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
+        }
 
-    // 2. DROPDOWN NAVIGATION LOGIC
-    function jumpToDate() {
-        const year = yearJump.value;
-        const month = monthJump.value;
-        // We use day '1' to avoid issues with months having different lengths
-        calendar.gotoDate(new Date(year, month, 1));
+        dateElement.innerHTML = datesHTML;
     }
+    prevBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        updateCalendar();
+    })
 
-    monthJump.addEventListener('change', jumpToDate);
-    yearJump.addEventListener('change', jumpToDate);
+    nextBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        updateCalendar();
+    })
 
-    // 3. SAVING DATA TO YOUR BACKEND (index.js)
-    document.getElementById('saveLogBtn').addEventListener('click', () => {
-        const logData = {
-            date: window.currentSelectedDate,
-            period: document.getElementById('periodCheck').checked,
-            pain: document.getElementById('painInput').value,
-            meds: document.getElementById('medInput').value
-        };
+    updateCalendar();
 
-        fetch('/save-period-log', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(logData)
-        })
-        .then(response => {
-            if (response.ok) {
-                alert("Log Saved Successfully!");
-                document.getElementById('logModal').style.display = 'none';
-                // Optional: You could refresh the calendar here to show the new log
-            }
-        })
-        .catch(err => console.error("Error saving log:", err));
-    });
-});
-
-  
 
 
 
