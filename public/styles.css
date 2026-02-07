@@ -1,12 +1,43 @@
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+    
+
     body{
         background-color: darksalmon;
         min-height: 100vh;
         display:flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
 
     }
+    .button-container {
+        display:flex;          /* for absolute positioning inside container */
+        align-items: center;                   /* full page width */
+        justify-content: space-between;
+        padding: 16px 24px;
+        width: 100%
+    }
 
+    #home-button{
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%)
+    }
+
+    #profile-button{
+        position: absolute;
+        right: 20px
+    }
+
+    .middle{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .calendar{
         width:380px;
         height: auto;
@@ -22,7 +53,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10 px;
+        padding: 10px;
     }
 
     .header button{
@@ -50,21 +81,11 @@
         font-weight: 500;
     }
     
-    .button-container {
-        position: relative;            /* for absolute positioning inside container */
-        width: 100%;                   /* full page width */
-        padding: 20px 0;
-        box-sizing: border-box;
-    }
+    
 
-    #home-button{
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%)
-    }
+    .modal-overlay{
+        margin-right: auto;
+        margin-top: auto;
 
-    #profile-button{
-        position: absolute;
-        right: 20 px
     }
     
