@@ -29,19 +29,52 @@ app.get('/profile-page', (req, res)=>{
 });
 
 /*Python Bridge*/
-app.get(('/get-sorted-data'), (req, res)=>{//Tells the server to run Python 
-    const pythonProcess= spawn('python', ['sort_database.py']);
+app.get('/drug_menstrual_effects', (req, res) => {
+    const pythonProcess = spawn('python', ['OpenFDA_API.py']);
 
-        let pythonData="";
+    let pythonData = "";
+    let errorData = "";
 
-        pythonProcess.stdout.on('data', (data)=>{//collect the data from Python
-            pythonData+=data.toString();
-        });
+    // Collect stdout data
+    pythonProcess.stdout.on('data', (data) => {
+        pythonData += data.toString();
+    });
 
-        pythonProcess.on('close', (code)=>{//When the Python finishes running send the data back to the user's browser
-            console.log(`Python script finished with code ${code}`);
-            res.json(JSON.parse(pythonData));       
-        });
+    // Collect stderr data (important for debugging)
+    pythonProcess.stderr.on('data', (data) => {
+        errorData += data.toString();
+        console.error(`Python stderr: ${data}`);
+    });
+
+    pythonProcess.on('close', (code) => {
+        console.log(`Python script finished with code ${code}`);
+        
+        if (code !== 0) {
+            console.error(`Error output: ${errorData}`);
+            return res.status(500).json({ 
+                error: 'Python script failed', 
+                details: errorData 
+            });
+        }
+
+        try {
+            const parsedData = JSON.parse(pythonData);
+            res.json(parsedData);
+        } catch (parseError) {
+            console.error('JSON parse error:', parseError);
+            console.error('Raw output:', pythonData);
+            res.status(500).json({ 
+                error: 'Failed to parse Python output',
+                raw: pythonData
+            });
+        }
+    });
+
+    // Handle process errors
+    pythonProcess.on('error', (error) => {
+        console.error('Failed to start Python process:', error);
+        res.status(500).json({ error: 'Failed to start Python script' });
+    });
 });
 
 
