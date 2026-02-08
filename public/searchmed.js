@@ -54,8 +54,8 @@ function displaySearchResult(drugData) {
     if (drugData.notFound) {
         medicationList.innerHTML = `
             <div style="text-align: center; padding: 3vh;">
-                <h3 style="color: #666; margin-bottom: 2vh;">Medication Not Found</h3>
-                <p style="color: #999;">"${drugData.drug_name}" is not in our database of ${374} medications with menstrual side effects.</p>
+                <h3 style="color: #666; margin-bottom: 2vh;">⚠️ Medication Not Found</h3>
+                <p style="color: #999;">"${drugData.drug_name}" is not in our database of 374 medications with menstrual side effects.</p>
                 <p style="color: #999; margin-top: 1vh;">This could mean:</p>
                 <ul style="list-style: none; padding: 0; color: #999;">
                     <li>• The medication doesn't have reported menstrual side effects</li>
@@ -94,7 +94,7 @@ function displaySearchResult(drugData) {
     // Menstrual effects section
     if (drugData.menstrual_effects && drugData.menstrual_effects.length > 0) {
         const effectsTitle = document.createElement('h3');
-        effectsTitle.textContent = `Reported Menstrual Side Effects (${drugData.effect_count})`;
+        effectsTitle.textContent = `⚠️ Reported Menstrual Side Effects (${drugData.effect_count})`;
         effectsTitle.style.cssText = `
             color: #333;
             margin-top: 2vh;
@@ -172,7 +172,7 @@ function displaySearchResult(drugData) {
         
     } else {
         const noEffects = document.createElement('p');
-        noEffects.textContent = 'ℹNo menstrual side effects reported for this medication in our database.';
+        noEffects.textContent = 'ℹ️ No menstrual side effects reported for this medication in our database.';
         noEffects.style.cssText = `
             color: #666;
             font-size: 1.1em;
@@ -200,7 +200,9 @@ function openDosageModal(drugData) {
     dosageUnit.value = '';
     dosageFrequency.value = '';
     
-    dosageModal.style.display = 'block';
+    dosageModal.style.display = 'flex';
+    dosageModal.style.alignItems = 'center';
+    dosageModal.style.justifyContent = 'center';
     console.log('Modal opened for:', drugData.drug_name);
 }
 
@@ -209,7 +211,7 @@ function displayMenstrualEffectsInModal(drugData) {
     menstrualEffectsList.innerHTML = '';
     
     if (!drugData.menstrual_effects || drugData.menstrual_effects.length === 0) {
-        menstrualEffectsList.innerHTML = '<p style="color: #666;">ℹNo menstrual effects reported for this medication in our database.</p>';
+        menstrualEffectsList.innerHTML = '<p style="color: #666;">ℹ️ No menstrual effects reported for this medication in our database.</p>';
         return;
     }
     
@@ -249,6 +251,59 @@ function closeDosageModal() {
     console.log('Modal closed');
 }
 
+// Show notification
+function showNotification(message, isSuccess = true) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${isSuccess ? '#4caf50' : '#ff5869'};
+        color: white;
+        padding: 1.5vh 2vw;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add CSS animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
 // Save dosage to database
 async function saveDosageToDatabase(medication, amount, unit, frequency) {
     try {
@@ -272,16 +327,21 @@ async function saveDosageToDatabase(medication, amount, unit, frequency) {
         
         const result = await response.json();
         console.log('Saved to database:', result);
-        alert('✅ Medication saved successfully!');
+        
+        // Show success notification
+        showNotification(`✅ ${medication} saved! View in "My Medications"`, true);
+        
         return result;
     } catch (error) {
         console.error('Error saving medication:', error);
         
         if (error.message.includes('redirect') || error.message.includes('login')) {
-            alert('Please log in to save medications.');
-            window.location.href = '/login';
+            showNotification('⚠️ Please log in to save medications', false);
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
         } else {
-            alert('Failed to save medication: ' + error.message);
+            showNotification('❌ Failed to save medication', false);
         }
     }
 }
@@ -300,7 +360,7 @@ saveDosageBtn.addEventListener('click', async () => {
         
         closeDosageModal();
     } else {
-        alert('Please fill in all fields (dose, unit, and frequency)');
+        alert('⚠️ Please fill in all fields (dose, unit, and frequency)');
     }
 });
 
@@ -309,12 +369,12 @@ async function searchMedication() {
     const searchTerm = medicationSearch.value.trim();
     
     if (!searchTerm) {
-        medicationList.innerHTML = '<p style="text-align: center; color: #ff5869; padding: 3vh;">Please enter a medication name</p>';
+        medicationList.innerHTML = '<p style="text-align: center; color: #ff5869; padding: 3vh;">⚠️ Please enter a medication name</p>';
         return;
     }
     
     // Show loading state
-    medicationList.innerHTML = '<p style="text-align: center; color: #666; padding: 3vh;">Searching for menstrual effects...</p>';
+    medicationList.innerHTML = '<p style="text-align: center; color: #666; padding: 3vh;">🔄 Searching for menstrual effects...</p>';
     
     // Fetch and display results
     const drugData = await fetchMenstrualEffects(searchTerm);
@@ -338,4 +398,4 @@ dosageModal.addEventListener('click', (e) => {
     }
 });
 
-console.log('Medication search initialized - ready to search database');
+console.log('✅ Medication search initialized - ready to search database');

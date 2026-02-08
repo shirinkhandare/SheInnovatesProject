@@ -5,63 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-   
-   
+    <title>My Medications - MEDstruation</title>
 </head>
 
 <body>
-   <div class="top">
-            <!--Button containers to be reused for every header-->
-            <div class="button-container">
-                <button id="home-button" onclick=" location.href='index.html'"> Home </button>
-                 <button id="profile-button" onclick =" location.href='profile-page.html'"> Profile </button>
-                <div id="MEDstruation">
-                    <h1>MEDstruation</h1> 
-                </div>
+    <div class="top">
+        <div class="button-container">
+            <button id="home-button" onclick="location.href='index.html'">Home</button>
+            <button id="profile-button" onclick="location.href='profile-page.html'">Profile</button>
+            
+            <div id="MEDstruation">
+                <h1>MEDstruation</h1> 
             </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin: 3vh 0;">
+        <h2 style="color: #ff5869; font-size: 2em;">My Medications</h2>
+        <p style="color: #666;">View and manage your saved medications</p>
     </div>
  
-  <div class="cards-grid">
- <div class="card">
-  <div class="content">
-    <div class= "monogram" > 
+    <div class="cards-grid">
+        <!-- Medications will be loaded here by JavaScript -->
+        <div style="grid-column: 1/-1; text-align: center; padding: 4vh;">
+            <p style="color: #666;">🔄 Loading medications...</p>
+        </div>
     </div>
-    <div class="text">
-      <div class="title">Medication</div>
-      <div class="description">Description</div>
-    </div>
-  </div>
-</div>
-<div class="card">
- 
-  <div class="content">
-    <div class="text">
-      <div class="title">Medication</div>
-      <div class="description">Description</div>
-    </div>
-  </div>
-</div>
-<div class="card">
- 
-  <div class="content">
-    <div class="text">
-      <div class="title">Medication</div>
-      <div class="description">Description</div>
-    </div>
-  </div>
-</div>
-<div class="card">
- 
-  <div class="content">
-    <div class="text">
-      <div class="title">Medication</div>
-      <div class="description">Description</div>
-    </div>
-  </div>
-</div>
-</div>
 
-
+    <script src="script.js"></script>
+    <script src="mymed.js"></script>
 </body>
 
 </html>
