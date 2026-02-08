@@ -286,7 +286,7 @@ app.get('/api/user-medications', async (req, res) => {
     }
 });
 
-app.delete('/api/user-medications/:id', isAuthenticated, async (req, res) => {
+app.delete('/api/user-medications/:id', async (req, res) => {
     try {
         await UserMedication.findByIdAndDelete(req.params.id);
         res.json({ message: 'Medication deleted' });
