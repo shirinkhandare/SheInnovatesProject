@@ -371,14 +371,19 @@
     align-items: center;
     padding: 30 px 20px;
     color: white;
+    line-height: 2;
 }
-.user-information{
+.profile-details{
     width: 40%;
-    background-color: salmon;
     padding: 20px;
-    border: 2px solid black;
-    border-radius: 10px;
+    color: white;
     text-align: left;
+    line-height: 2;
+}
+
+.profile-pic{
+    max-width: 150px;
+    max-height: 150px;
 }
 /*Search bar from the SearchMedication page*/
 
