@@ -2,57 +2,87 @@
   MEDICATION SEARCH & DOSAGE FUNCTIONALITY
 ===============================================*/
 
-// Huge medication array (replaces database)
-let medications = [
-    "Acetaminophen", "Advil", "Albuterol", "Alendronate", "Allopurinol", "Alprazolam",
-    "Amitriptyline", "Amlodipine", "Amoxicillin", "Aspirin", "Atenolol", "Atorvastatin",
-    "Azithromycin", "Baclofen", "Benadryl", "Benzonatate", "Bupropion", "Buspirone",
-    "Carvedilol", "Cephalexin", "Cetirizine", "Ciprofloxacin", "Citalopram", "Claritin",
-    "Clindamycin", "Clopidogrel", "Clonazepam", "Clonidine", "Cyclobenzaprine",
-    "Diazepam", "Diclofenac", "Diltiazem", "Diphenhydramine", "Doxycycline", "Duloxetine",
-    "Eliquis", "Escitalopram", "Esomeprazole", "Famotidine", "Fexofenadine", "Finasteride",
-    "Fluconazole", "Fluoxetine", "Fluticasone", "Furosemide", "Gabapentin", "Glipizide",
-    "Hydrochlorothiazide", "Hydrocodone", "Hydroxyzine", "Ibuprofen", "Insulin", "Irbesartan",
-    "Latanoprost", "Levothyroxine", "Lisinopril", "Loratadine", "Lorazepam", "Losartan",
-    "Lovastatin", "Meloxicam", "Metformin", "Methotrexate", "Metoprolol", "Montelukast",
-    "Naproxen", "Nifedipine", "Omeprazole", "Ondansetron", "Oxycodone", "Pantoprazole",
-    "Paroxetine", "Penicillin", "Potassium Chloride", "Pravastatin", "Prednisone", "Pregabalin",
-    "Promethazine", "Propranolol", "Quetiapine", "Ranitidine", "Rosuvastatin", "Sertraline",
-    "Simvastatin", "Spironolactone", "Sulfamethoxazole", "Tamsulosin", "Tizanidine", "Topiramate",
-    "Tramadol", "Trazodone", "Triamcinolone", "Tylenol", "Valacyclovir", "Valsartan",
-    "Venlafaxine", "Verapamil", "Warfarin", "Xanax", "Zoloft", "Zolpidem", "Zyrtec",
+// Medication data with side effects
+let medications = {
+    "Acetaminophen": "Common side effects: Nausea, stomach pain, loss of appetite, headache. Rare but serious: liver damage with high doses.",
+    "Advil": "Common side effects: Upset stomach, heartburn, nausea, headache, dizziness. May increase risk of heart attack or stroke.",
+    "Albuterol": "Common side effects: Nervousness, shaking, headache, fast heartbeat, dizziness, nausea.",
+    "Alprazolam": "Common side effects: Drowsiness, dizziness, increased saliva, memory problems. Risk of dependence.",
+    "Amitriptyline": "Common side effects: Drowsiness, dry mouth, blurred vision, constipation, weight gain, dizziness.",
+    "Amlodipine": "Common side effects: Swelling of ankles/feet, dizziness, flushing, headache, fatigue.",
+    "Amoxicillin": "Common side effects: Nausea, vomiting, diarrhea, rash, yeast infection.",
+    "Aspirin": "Common side effects: Upset stomach, heartburn, nausea. May increase bleeding risk.",
+    "Atenolol": "Common side effects: Dizziness, tiredness, cold hands/feet, slow heartbeat, nausea.",
+    "Atorvastatin": "Common side effects: Muscle pain, diarrhea, upset stomach, joint pain.",
+    "Azithromycin": "Common side effects: Nausea, diarrhea, vomiting, stomach pain, headache.",
+    "Benadryl": "Common side effects: Drowsiness, dizziness, dry mouth, constipation, blurred vision.",
+    "Bupropion": "Common side effects: Dry mouth, nausea, insomnia, headache, weight loss, increased sweating.",
+    "Cetirizine": "Common side effects: Drowsiness, dry mouth, fatigue, dizziness.",
+    "Ciprofloxacin": "Common side effects: Nausea, diarrhea, dizziness, headache. May cause tendon problems.",
+    "Citalopram": "Common side effects: Nausea, dry mouth, drowsiness, insomnia, increased sweating.",
+    "Claritin": "Common side effects: Headache, drowsiness, fatigue, dry mouth.",
+    "Cyclobenzaprine": "Common side effects: Drowsiness, dizziness, dry mouth, fatigue, blurred vision.",
+    "Diazepam": "Common side effects: Drowsiness, fatigue, muscle weakness, dizziness. Risk of dependence.",
+    "Duloxetine": "Common side effects: Nausea, dry mouth, drowsiness, fatigue, constipation, loss of appetite.",
+    "Escitalopram": "Common side effects: Nausea, drowsiness, dry mouth, increased sweating, sexual dysfunction.",
+    "Fluoxetine": "Common side effects: Nausea, headache, drowsiness, insomnia, diarrhea, sexual dysfunction.",
+    "Gabapentin": "Common side effects: Dizziness, drowsiness, fatigue, swelling in hands/feet.",
+    "Hydrochlorothiazide": "Common side effects: Dizziness, headache, increased urination, low potassium.",
+    "Ibuprofen": "Common side effects: Upset stomach, heartburn, nausea, headache, dizziness.",
+    "Levothyroxine": "Common side effects: Hair loss (temporary), weight changes, headache, nervousness.",
+    "Lisinopril": "Common side effects: Dizziness, headache, persistent dry cough, fatigue.",
+    "Loratadine": "Common side effects: Headache, drowsiness, dry mouth, fatigue.",
+    "Lorazepam": "Common side effects: Drowsiness, dizziness, weakness, unsteadiness. Risk of dependence.",
+    "Losartan": "Common side effects: Dizziness, stuffy nose, back pain, diarrhea.",
+    "Metformin": "Common side effects: Nausea, vomiting, diarrhea, stomach upset, metallic taste.",
+    "Metoprolol": "Common side effects: Dizziness, tiredness, depression, shortness of breath, slow heartbeat.",
+    "Montelukast": "Common side effects: Headache, dizziness, stomach pain, heartburn, fatigue.",
+    "Naproxen": "Common side effects: Upset stomach, heartburn, drowsiness, headache, dizziness.",
+    "Omeprazole": "Common side effects: Headache, nausea, diarrhea, stomach pain, gas.",
+    "Prednisone": "Common side effects: Increased appetite, weight gain, insomnia, mood changes, high blood sugar.",
+    "Sertraline": "Common side effects: Nausea, diarrhea, drowsiness, dry mouth, sexual dysfunction.",
+    "Simvastatin": "Common side effects: Headache, nausea, stomach pain, constipation, muscle pain.",
+    "Tramadol": "Common side effects: Dizziness, nausea, constipation, headache, drowsiness.",
+    "Trazodone": "Common side effects: Drowsiness, dizziness, dry mouth, headache, blurred vision.",
+    "Zolpidem": "Common side effects: Drowsiness, dizziness, diarrhea, grogginess. May cause sleepwalking.",
+    
     // Birth Control & Hormones
-    "Yaz", "Yasmin", "Ortho Tri-Cyclen", "Lo Loestrin Fe", "Nuvaring", "Mirena",
-    "Nexplanon", "Depo-Provera", "Plan B", "Ella", "Estradiol", "Progesterone",
-    // Pain & Anti-inflammatory
-    "Toradol", "Celebrex", "Mobic", "Voltaren", "Relafen", "Anaprox",
-    // Antibiotics
-    "Augmentin", "Bactrim", "Keflex", "Levaquin", "Zithromax", "Flagyl",
-    // Diabetes
-    "Lantus", "Humalog", "Novolog", "Ozempic", "Trulicity", "Jardiance", "Januvia",
-    // Asthma/Respiratory
-    "Symbicort", "Advair", "Ventolin", "ProAir", "Singulair", "Breo Ellipta",
-    // Mental Health
-    "Lexapro", "Prozac", "Wellbutrin", "Cymbalta", "Effexor", "Abilify", "Seroquel",
-    // Blood Pressure
-    "Norvasc", "Diovan", "Benicar", "Cozaar", "Coreg", "Toprol XL",
-    // Cholesterol
-    "Lipitor", "Crestor", "Zocor", "Pravachol", "Livalo",
-    // Stomach/Digestive
-    "Nexium", "Prilosec", "Prevacid", "Protonix", "Zantac", "Pepcid",
-    // Thyroid
-    "Synthroid", "Levoxyl", "Armour Thyroid", "Cytomel",
-    // Sleep
-    "Ambien", "Lunesta", "Restoril", "Sonata",
-    // Allergy
-    "Allegra", "Flonase", "Nasacort", "Patanase",
-    // Other Common Meds
-    "Viagra", "Cialis", "Flomax", "Propecia", "Latisse", "Restasis"
-].sort();
+    "Yaz": "Common side effects: Nausea, breast tenderness, headache, mood changes, weight changes, irregular bleeding.",
+    "Yasmin": "Common side effects: Nausea, breast tenderness, headache, mood changes, weight changes.",
+    "Ortho Tri-Cyclen": "Common side effects: Nausea, breast tenderness, headache, mood swings, breakthrough bleeding.",
+    "Lo Loestrin Fe": "Common side effects: Nausea, breast tenderness, headache, mood changes, spotting between periods.",
+    "Nuvaring": "Common side effects: Vaginal irritation, discharge, headache, nausea, breast tenderness.",
+    "Mirena": "Common side effects: Irregular bleeding, headache, acne, breast tenderness, ovarian cysts.",
+    "Nexplanon": "Common side effects: Irregular bleeding, headache, weight gain, acne, mood changes.",
+    "Depo-Provera": "Common side effects: Weight gain, irregular bleeding, headache, mood changes, bone density loss.",
+    "Plan B": "Common side effects: Nausea, fatigue, headache, dizziness, breast tenderness, irregular bleeding.",
+    "Estradiol": "Common side effects: Nausea, bloating, breast tenderness, headache, mood changes.",
+    "Progesterone": "Common side effects: Drowsiness, dizziness, headache, breast tenderness, mood changes.",
+    
+    // Additional Common Medications
+    "Tylenol": "Common side effects: Nausea, stomach pain, loss of appetite, headache. Rare: liver damage with high doses.",
+    "Xanax": "Common side effects: Drowsiness, dizziness, increased saliva, memory problems. High risk of dependence.",
+    "Zoloft": "Common side effects: Nausea, diarrhea, drowsiness, dry mouth, sexual dysfunction, insomnia.",
+    "Zyrtec": "Common side effects: Drowsiness, dry mouth, fatigue, dizziness, headache.",
+    "Lexapro": "Common side effects: Nausea, insomnia, fatigue, drowsiness, sexual dysfunction, dry mouth.",
+    "Prozac": "Common side effects: Nausea, headache, drowsiness, insomnia, sexual dysfunction, dry mouth.",
+    "Wellbutrin": "Common side effects: Dry mouth, nausea, insomnia, headache, weight loss, increased sweating.",
+    "Lipitor": "Common side effects: Muscle pain, diarrhea, upset stomach, joint pain, headache.",
+    "Synthroid": "Common side effects: Hair loss (temporary), weight changes, headache, nervousness, increased sweating.",
+    "Ambien": "Common side effects: Drowsiness, dizziness, diarrhea, grogginess. May cause sleepwalking or sleep-eating.",
+    "Viagra": "Common side effects: Headache, flushing, upset stomach, stuffy nose, dizziness, vision changes.",
+    "Ozempic": "Common side effects: Nausea, vomiting, diarrhea, stomach pain, constipation, decreased appetite.",
+    "Jardiance": "Common side effects: Urinary tract infections, increased urination, yeast infections, nausea.",
+    "Symbicort": "Common side effects: Headache, throat irritation, upper respiratory infection, oral thrush."
+};
+
+// Get sorted medication names
+const medicationNames = Object.keys(medications).sort();
 
 // Dosage modal elements
 const dosageModal = document.getElementById('dosageModal');
 const selectedMedName = document.getElementById('selectedMedName');
+const sideEffectsText = document.getElementById('sideEffectsText');
 const dosageAmount = document.getElementById('dosageAmount');
 const dosageUnit = document.getElementById('dosageUnit');
 const dosageFrequency = document.getElementById('dosageFrequency');
@@ -89,6 +119,9 @@ function openDosageModal(medName) {
     selectedMedication = medName;
     selectedMedName.textContent = medName;
     
+    // Display side effects
+    sideEffectsText.textContent = medications[medName] || "No side effect information available.";
+    
     // Load existing dosage if available
     if (userMedications[medName]) {
         dosageAmount.value = userMedications[medName].amount;
@@ -117,13 +150,14 @@ saveDosageBtn.addEventListener('click', () => {
         userMedications[selectedMedication] = {
             amount: dosageAmount.value,
             unit: dosageUnit.value,
-            frequency: dosageFrequency.value
+            frequency: dosageFrequency.value,
+            sideEffects: medications[selectedMedication]
         };
         
         console.log('Medication saved:', selectedMedication, userMedications[selectedMedication]);
         console.log('All saved medications:', userMedications);
         
-        alert(`✅ ${selectedMedication} saved!\n${dosageAmount.value}${dosageUnit.value} - ${dosageFrequency.value}`);
+        alert(`✅ ${selectedMedication} logged!\n${dosageAmount.value}${dosageUnit.value} - ${dosageFrequency.value}`);
         
         closeDosageModal();
     } else {
@@ -134,7 +168,7 @@ saveDosageBtn.addEventListener('click', () => {
 // Search functionality
 function searchMedications() {
     const searchTerm = medicationSearch.value.toLowerCase();
-    const filtered = medications.filter(med => 
+    const filtered = medicationNames.filter(med => 
         med.toLowerCase().includes(searchTerm)
     );
     displayMedications(filtered);
@@ -152,5 +186,5 @@ dosageModal.addEventListener('click', (e) => {
 
 // Initialize - display all medications on page load
 console.log('Initializing medication search...');
-console.log('Total medications available:', medications.length);
-displayMedications(medications);
+console.log('Total medications available:', medicationNames.length);
+displayMedications(medicationNames);
