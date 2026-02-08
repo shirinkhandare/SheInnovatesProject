@@ -1,11 +1,36 @@
 # SheInnovatesProject
 Project
-created by Nandin-Erdene Molomjamts, Lan Nguyen, Shirin Khandare, Veronika Makowski
+created by Nandin-Erdene Molomjamts, Lan Nguyen, Shirin Khandare, and Veronika Makowski
 
-The goal of MEDstruation is to provide user-friendly experience for women to track their menstruation cycle, learn about the potential side effects of their medication in simplified and understandable manner. 
+The goal of MEDstruation is to provide user-friendly experience for users to track their menstruation cycle and learn about the potential side effects of their medication in simplified and understandable manner. Medication guides are often long and complex, leading few people to truly take the time to read and understand how they may be affected by the medication they take. MEDstruation aims to simplify the process by providing users with their medication's potential menstrual cycle side effects conveniently accessible from their period tracker. 
 
-This is the link to the Google Drive that contains the data/ folder:
-https://drive.google.com/drive/folders/1bcOpWSFr3REJmCW4WK9dQTUDvXipOGsj?usp=drive_link
+** The technologies used include: **
+-MongoDB
+-VSCode
+
+Languages;
+-HTML
+-CSS
+-JavaScript
+-Python
+
+We chose the above technology for this project in the interest of simplicity. HTML, JavaScript, Python, and CSS provide a simplistic base that is easy to work with on a time-crunch. Additionally, VSCode is a familiar environment for many developers. Finally, MongoDB conveniently stores data in a easy-to-follow format, making it ideal for beginners such as ourselves. 
+
+**Challenges**
+
+During the course of this Hackathon, we experienced more challenges than we had previously thought possible in a 36 hour time limit. Implementing the database into the rest of the stack caused several issues, as servers stopped, links failed, and code that had previously worked flawlessly gave up entirely. still working on...
+
+Additionally, managing user input without a exclusive database led to issues creating a sign-in and login. We managed to get by utilizing localStorage, but a more refined method is something we hope to implement in the future.
+
+**Future Features**
+
+If possible, we would like to include the following features in Medstruation:
+
+-Period Prediction w/meds and history
+
+# Installation 
+
+# Usage Setup
 
 ## Setup Instructions for MongoDB
 
