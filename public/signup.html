@@ -1,62 +1,191 @@
 <!DOCTYPE html>
 <html>
 <head>
+<<<<<<< HEAD
+    <title>MEDstruation Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #FFCFCF;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #ff5869;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #ff5869;
+        }
+        #error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        #success {
+            color: green;
+            margin-bottom: 10px;
+        }
+        .profile-pic-preview {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 10px;
+            display: none;
+            border-radius: 50%;
+        }
+        .optional {
+            color: #666;
+            font-size: 12px;
+            font-weight: normal;
+        }
+    </style>
+=======
     <title>Test Signup</title>
-    <link rel="stylesheet" href="card.css">
+    <link rel="stylesheet" href="styles.css">
      <h1 class = "format"> MEDstruation </h1>
     <h2 class style="color: white;"> Signup Page </h1>
+>>>>>>> 335a8e8c0aa3fc898aad7758e4d9677abb619c7d
 </head>
 <body>
-    <div id="error" style="color: red;"></div>
-    <div id="success" style="color: green;"></div>
+    <h1>Create Account</h1>
+    <div id="error"></div>
+    <div id="success"></div>
+    
     <form id="signupForm">
-        
-        <label for="email" style="color: white;"> Enter Username: </label>
-        <input type="text" id="username" placeholder="Username" required minlength="3"><br><br>
-        <label for="email" style="color: white;"> Enter Email: </label>
-        <input type="email" id="email" placeholder="Email" required><br><br>
-        <label for="password" style="color: white;"> Enter Password: </label>
-        <input type="password" id="password" placeholder="Password" required minlength="6"><br><br>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter Username" required minlength="3">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Password (min 6 chars)" required minlength="6">
+        </div>
+
+        <div class="form-group">
+            <label for="dateOfBirth">Date of Birth</label>
+            <input type="date" id="dateOfBirth" required>
+        </div>
+
+        <div class="form-group">
+            <label for="weight">Weight <span class="optional">(optional, in lbs)</span></label>
+            <input type="number" id="weight" placeholder="Weight in pounds" min="0">
+        </div>
+
+        <div class="form-group">
+            <label for="height">Height <span class="optional">(optional, in inches)</span></label>
+            <input type="number" id="height" placeholder="Height in inches" min="0">
+        </div>
+
+        <div class="form-group">
+            <label for="profilePicture">Profile Picture <span class="optional">(optional)</span></label>
+            <input type="file" id="profilePicture" accept="image/*">
+            <img id="preview" class="profile-pic-preview" alt="Profile preview">
+        </div>
+
         <button type="submit">Sign Up</button>
     </form>
+    
     <p><a href="/login">Already have an account? Login</a></p>
 
-
     <script>
+        // Preview profile picture
+        document.getElementById('profilePicture').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('preview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            console.log('Form submitted!'); // Check if this appears
+            console.log('Form submitted!');
             
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const dateOfBirth = document.getElementById('dateOfBirth').value;
+            const weight = document.getElementById('weight').value || null;
+            const height = document.getElementById('height').value || null;
             
-            console.log('Form data:', { username, email, passwordLength: password.length });
-            
-            try {
-                console.log('Sending request to /api/register...');
-                
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email, password })
-                });
-                
-                console.log('Response status:', response.status);
-                
-                const data = await response.json();
-                console.log('Response data:', data);
-                
-                if (response.ok) {
-                    document.getElementById('success').textContent = 'Registration successful! Redirecting...';
-                    setTimeout(() => window.location.href = '/profile-page', 1000);
-                } else {
-                    document.getElementById('error').textContent = data.error || 'Registration failed';
+            // Get profile picture as base64
+            let profilePicture = '';
+            const fileInput = document.getElementById('profilePicture');
+            if (fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    profilePicture = e.target.result;
+                    await submitForm();
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                await submitForm();
+            }
+
+            async function submitForm() {
+                try {
+                    console.log('Sending request to /api/register...');
+                    
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            username, 
+                            email, 
+                            password, 
+                            dateOfBirth,
+                            weight: weight ? Number(weight) : null,
+                            height: height ? Number(height) : null,
+                            profilePicture
+                        })
+                    });
+                    
+                    console.log('Response status:', response.status);
+                    
+                    const data = await response.json();
+                    console.log('Response data:', data);
+                    
+                    if (response.ok) {
+                        document.getElementById('success').textContent = 'Registration successful! Redirecting...';
+                        setTimeout(() => window.location.href = '/mymed', 1500);
+                    } else {
+                        document.getElementById('error').textContent = data.error || 'Registration failed';
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    document.getElementById('error').textContent = 'Network error: ' + error.message;
                 }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                document.getElementById('error').textContent = 'Network error: ' + error.message;
             }
         });
     </script>

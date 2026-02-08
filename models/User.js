@@ -1,25 +1,42 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // encryption
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     username: {
-        type: String, // create a unique username of type String that's at least a length of 3
+        type: String,
         required: true,
         unique: true,
         trim: true,
         minlength: 3
     },
-    email: { // email field that's of type String
+    email: {
         type: String, 
         required: true,
         unique: true,
         lowercase: true,
         trim: true
     },
-    password: { // create a password that's at least a length of 6
+    password: {
         type: String,
         required: true,
         minlength: 6
+    },
+    dateOfBirth: {
+        type: Date,
+        required: true
+    },
+    weight: {
+        type: Number, // in pounds or kg
+        required: false
+    },
+    height: {
+        type: Number, // in inches or cm
+        required: false
+    },
+    profilePicture: {
+        type: String, // URL or base64 string
+        required: false,
+        default: '' // default empty, can add a default avatar URL later
     },
     createdAt: {
         type: Date,
@@ -40,4 +57,4 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', userSchema);
