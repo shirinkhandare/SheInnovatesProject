@@ -17,7 +17,7 @@
             </div>
     </div>
     <div class="profile-header">
-        <img src= photo alt="user-picture" class="profile-pic"><br>
+       <img src="" alt="user-picture" class="profile-pic"><br>
         <h1 span id="usernameDisplay"></span></h1>
         <h1 span id="emailDisplay"></span></h1>
     </div>
@@ -26,42 +26,55 @@
         <h2> Height: <span id="heightDisplay">inches </span> inches </h2>
         <h2> Weight: <span id="weightDisplay"> </span> lbs  </h2>
     </div>
-    <script>
-        const username = localStorage.getItem('currentUser');
-        const email = localStorage.getItem('currentEmail');
-        const dob = localStorage.getItem('dateOfBirth');
-        const height = localStorage.getItem('currentHeight');
-        const weight = localStorage.getItem('currentWeight');
-        if(!username){
-            window.location.href ='signup.html';
-        }
-        else{
-            document.getElementById('usernameDisplay').textContent = username;
-        }
-        if(!email){
-            window.location.href = 'signup.html';
-        }
-        else{
-            document.getElementById('emailDisplay').textContent = email;
-        }
-        if(!dob){
-            window.location.href ='signup.html';
-        }
-        else{
-            document.getElementById('DOBDisplay').textContent = dob;
-        }
-        if(!height){
-            window.location.href ='signup.html';
-        }
-        else{
-            document.getElementById('heightDisplay').textContent = height;
-        }
-        if(!weight){
-            window.location.href ='signup.html';
-        }
-        else{
-            document.getElementById('weightDisplay').textContent = weight;
-        }
-    </script>
+   <script>
+// GET PROFILE PICTURE FIRST
+const profilePicture = localStorage.getItem('profilePicture');
+
+const username = localStorage.getItem('currentUser');
+const email = localStorage.getItem('currentEmail');
+const dob = localStorage.getItem('dateOfBirth');
+const height = localStorage.getItem('currentHeight');
+const weight = localStorage.getItem('currentWeight');
+
+if(!username){
+    window.location.href ='signup.html';
+} else {
+    document.getElementById('usernameDisplay').textContent = username;
+}
+
+if(!email){
+    window.location.href = 'signup.html';
+} else {
+    document.getElementById('emailDisplay').textContent = email;
+}
+
+if(!dob){
+    window.location.href ='signup.html';
+} else {
+    document.getElementById('DOBDisplay').textContent = dob;
+}
+
+if(!height){
+    window.location.href ='signup.html';
+} else {
+    document.getElementById('heightDisplay').textContent = height;
+}
+
+if(!weight){
+    window.location.href ='signup.html';
+} else {
+    document.getElementById('weightDisplay').textContent = weight;
+}
+
+// Set profile picture
+const imgElement = document.querySelector('.profile-pic');
+if (profilePicture) {
+    imgElement.src = profilePicture;
+    console.log('Profile picture loaded! Type:', profilePicture.substring(0, 30));
+} else {
+    imgElement.style.display = 'none';
+    console.log('No profile picture found');
+}
+</script>
 </body>
 </html>

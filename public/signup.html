@@ -207,27 +207,44 @@
             localStorage.setItem('currentHeight',height);
             localStorage.setItem('currentWeight', weight);
             // Get profile picture as base64
-            let profilePicture = '';
-            const fileInput = document.getElementById('profilePicture');
-            if (fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = async function (e) {
-                    profilePicture = e.target.result;
-                    await submitForm();
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                await submitForm();
-            }
-
-            
-            async function submitForm() {
-                // Skip fetch for now
-                console.log('Skipping fetch, demo only');
-                successDiv.textContent = 'Registration successful! Redirecting...';
-                successDiv.style.display = 'block';
-                setTimeout(() => window.location.href = 'index.html', 1500);
-            }
+             const fileInput = document.getElementById('profilePicture');
+    if (fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+    // Convert image to JPEG format (handles HEIC and all formats)
+    const img = new Image();
+    img.onload = async function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        
+        // Convert to JPEG (browser-compatible)
+        const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        localStorage.setItem('profilePicture', jpegDataUrl);
+        console.log('Image converted to JPEG!');
+        
+        await submitForm();
+    };
+    img.onerror = async function() {
+        console.error('Image conversion failed, using original');
+        localStorage.setItem('profilePicture', e.target.result);
+        await submitForm();
+    };
+    img.src = e.target.result;
+};
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        await submitForm();
+    }
+    
+    async function submitForm() {
+        console.log('Skipping fetch, demo only');
+        successDiv.textContent = 'Registration successful! Redirecting...';
+        successDiv.style.display = 'block';
+        setTimeout(() => window.location.href = 'index.html', 1500);
+    }
         });
         
 
