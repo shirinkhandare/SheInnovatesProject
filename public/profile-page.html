@@ -27,12 +27,11 @@
         <h2> Weight: <span id="weightDisplay"> </span> lbs  </h2>
     </div>
     <script>
-        const photo = sessionStorage.getItem('userPhoto');
-        const username = sessionStorage.getItem('currentUser');
-        const email = sessionStorage.getItem('currentEmail');
-        const dob = sessionStorage.getItem('dateOfBirth');
-        const height = sessionStorage.getItem('currentHeight');
-        const weight = sessionStorage.getItem('currentWeight');
+        const username = localStorage.getItem('currentUser');
+        const email = localStorage.getItem('currentEmail');
+        const dob = localStorage.getItem('dateOfBirth');
+        const height = localStorage.getItem('currentHeight');
+        const weight = localStorage.getItem('currentWeight');
         if(!username){
             window.location.href ='signup.html';
         }

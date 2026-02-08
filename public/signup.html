@@ -183,7 +183,6 @@
             };
         reader.readAsDataURL(file);
         }
-        sessionStorage.setItem('userPhoto', file);
         });
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
@@ -200,13 +199,13 @@
             const dateOfBirth = document.getElementById('dateOfBirth').value;
             const weight = document.getElementById('weight').value || null;
             const height = document.getElementById('height').value || null;
-
             // Transfer user data to session storage
-            sessionStorage.setItem('currentUser', username);
-            sessionStorage.setItem('currentEmail',email);
-            sessionStorage.setItem('dateOfBirth', dateOfBirth);
-            sessionStorage.setItem('currentHeight',height);
-            sessionStorage.setItem('currentWeight', weight);
+            localStorage.setItem('currentUser', username);
+            localStorage.setItem('currentEmail',email);
+            localStorage.setItem('userPassword', password);
+            localStorage.setItem('dateOfBirth', dateOfBirth);
+            localStorage.setItem('currentHeight',height);
+            localStorage.setItem('currentWeight', weight);
             // Get profile picture as base64
             let profilePicture = '';
             const fileInput = document.getElementById('profilePicture');

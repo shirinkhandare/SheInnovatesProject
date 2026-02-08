@@ -11,33 +11,33 @@
     <div id="error" style="color: red;"></div>
 
     <form id="loginForm">
-        <label for="email" style="color: white;"> Enter Username: </label>
+        <label for="email" style="color: white;"> Enter Email: </label>
         <input type="email" id="email" placeholder="Email" required  style="width: 75%;"><br><br>
-         <label for="password" style="color: white;"> Enter Username: </label>
+        <label for="password" style="color: white;"> Enter Password: </label>
         <input type="password" id="password" placeholder="Password" required style="width: 75%"><br><br>
         <button type="submit">Login</button>
     </form>
-    <p style="color: white; "><a href="/signup">Don't have an account? Sign up</a></p>
+    <p style="color: white; "><a href="signup.html">Don't have an account? Sign up</a></p>
 
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const inputEmail = document.getElementById('email').value;
+            const inputPassword= document.getElementById('password').value;
             
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                window.location.href = '/profile-page';
+            // Read saved user data from sessionStorage
+            const savedEmail = localStorage.getItem('currentEmail');
+            const savedPassword = localStorage.getItem('userPassword'); 
+
+
+            const errorDiv = document.getElementById('error');
+
+            if (inputEmail === savedEmail && inputPassword === savedPassword) {
+                // Login successful
+                window.location.href = 'index.html'; // redirect
             } else {
-                document.getElementById('error').textContent = data.error;
+                errorDiv.textContent = 'Incorrect email or password';
             }
         });
     </script>
