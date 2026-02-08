@@ -106,7 +106,10 @@ const updateCalendar = () => {
         const activeClass = dateString === new Date().toDateString() ? 'active' : '';
         const hasLog = logs[dateString] ? 'has-log' : '';
         
-        datesHTML += `<div class="date ${activeClass} ${hasLog}" data-date="${dateString}">${i}</div>`;
+        // Add period-day class if period is checked for this date
+        const periodClass = logs[dateString] && logs[dateString].period ? 'period-day' : '';
+        
+        datesHTML += `<div class="date ${activeClass} ${hasLog} ${periodClass}" data-date="${dateString}">${i}</div>`;
     }
 
     // Next month's dates
