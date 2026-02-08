@@ -137,4 +137,3 @@ The database already has 374 drugs with menstrual side effects. You only need to
 - [https://www.youtube.com/watch?v=oRbLowjKVzI&t=92s](https://www.youtube.com/watch?v=oRbLowjKVzI&t=92s)
 - [https://www.youtube.com/watch?v=OcncrLyddAs](https://www.youtube.com/watch?v=OcncrLyddAs)
 - [https://www.youtube.com/watch?v=vY2xUc4TVmY](https://www.youtube.com/watch?v=vY2xUc4TVmY)
-# Licensing 
