@@ -183,6 +183,7 @@
             };
         reader.readAsDataURL(file);
         }
+        sessionStorage.setItem('userPhoto', file);
         });
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {

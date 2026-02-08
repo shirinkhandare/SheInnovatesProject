@@ -17,16 +17,17 @@
             </div>
     </div>
     <div class="profile-header">
-        <img src="Profile-PNG-File.png" alt="user-picture" class="profile-pic"><br>
+        <img src= photo alt="user-picture" class="profile-pic"><br>
         <h1 span id="usernameDisplay"></span></h1>
         <h1 span id="emailDisplay"></span></h1>
     </div>
     <div class="profile-details">
         <h2 span id="DOBDisplay"></span></h2>
         <h2> Height: <span id="heightDisplay">inches </span> inches </h2>
-        <h2 span id="weightDisplay"> </span> weight </h2>
+        <h2> Weight: <span id="weightDisplay"> </span> lbs  </h2>
     </div>
     <script>
+        const photo = sessionStorage.getItem('userPhoto');
         const username = sessionStorage.getItem('currentUser');
         const email = sessionStorage.getItem('currentEmail');
         const dob = sessionStorage.getItem('dateOfBirth');
