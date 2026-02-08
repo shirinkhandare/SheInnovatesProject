@@ -170,18 +170,19 @@
     <p><a href="/login">Already have an account? Login</a></p>
 
     <script>
+        console.log('Signup script loaded');
         // Preview profile picture
-        document.getElementById('profilePicture').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    const preview = document.getElementById('preview');
-                    preview.src = event.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
+        document.getElementById('profilePicture').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const preview = document.getElementById('preview');
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+            };
+        reader.readAsDataURL(file);
+        }
         });
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
@@ -216,44 +217,17 @@
                 await submitForm();
             }
 
+            
             async function submitForm() {
-                try {
-                    const response = await fetch('/api/register', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            username,
-                            email,
-                            password,
-                            dateOfBirth,
-                            weight: weight ? Number(weight) : null,
-                            height: height ? Number(height) : null,
-                            profilePicture
-                        })
-                    });
-
-                    let data = {};
-                    try {
-                        data = await response.json();
-                    } catch {
-                        console.warn('No JSON returned from server');
-                    }
-
-                    if (response.ok) {
-                        successDiv.textContent = 'Registration successful! Redirecting...';
-                        successDiv.style.display = 'block';
-                        setTimeout(() => window.location.href = '/mymed', 1500);
-                    } else {
-                        errorDiv.textContent = data.error || 'Registration failed';
-                        errorDiv.style.display = 'block';
-                    }
-                } catch (error) {
-                    console.error('Fetch error:', error);
-                    errorDiv.textContent = 'Network error: ' + error.message;
-                    errorDiv.style.display = 'block';
-                }
+                // Skip fetch for now
+                console.log('Skipping fetch, demo only');
+                successDiv.textContent = 'Registration successful! Redirecting...';
+                successDiv.style.display = 'block';
+                setTimeout(() => window.location.href = 'index.html', 1500);
             }
+        });
+        
+
     </script>
 </body>
-
 </html>
