@@ -69,6 +69,10 @@ const userMedicationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    frequency: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -187,39 +191,70 @@ app.get('/api/user', isAuthenticated, async (req, res) => {
 });
 
 // ============================================
-// MEDICATION ROUTES
+// MEDICATION ROUTES - DRUG DATABASE
 // ============================================
 
-// Get all medications (sorted alphabetically)
-app.get('/drug_menstrual_effects', (req, res) => {
-    const drugName = req.query.name;
-    // 1. Start Python with the drug name argument
-    const pythonProcess = spawn('python', ['OpenFDA_API.py', drugName]);
-
-    let pythonData = "";
-
-    pythonProcess.stdout.on('data', (data) => {
-        pythonData += data.toString();
-    });
-
-    pythonProcess.on('close', (code) => {
-        if (code === 0) {
-            try {
-                // 2. Return the data the Python script found!
-                res.json(JSON.parse(pythonData));
-            } catch (e) {
-                res.status(500).json({ error: "Python sent invalid data" });
-            }
-        } else {
-            res.status(500).json({ error: "Python script failed" });
-        }
-    });
+// Get all medications from drug_database (sorted alphabetically)
+app.get('/api/medications', async (req, res) => {
+    try {
+        const drugDb = mongoose.connection.useDb('drug_database');
+        const MenstrualEffect = drugDb.model('MenstrualEffect', new mongoose.Schema({
+            drug_name: String,
+            menstrual_effects: [String],
+            effect_count: Number
+        }), 'menstrual_effects');
+        
+        const drugs = await MenstrualEffect.find({}, { drug_name: 1, _id: 0 })
+            .sort({ drug_name: 1 });
+        
+        const drugNames = drugs.map(d => d.drug_name);
+        console.log(`✅ Fetched ${drugNames.length} medications from drug_database`);
+        res.json(drugNames);
+    } catch (error) {
+        console.error('Error fetching medications:', error);
+        res.status(500).json({ error: 'Failed to fetch medications' });
+    }
 });
+
+// Get specific drug's menstrual effects
+app.get('/api/drug/:drugName', async (req, res) => {
+    try {
+        const drugName = req.params.drugName.toUpperCase();
+        
+        const drugDb = mongoose.connection.useDb('drug_database');
+        const MenstrualEffect = drugDb.model('MenstrualEffect', new mongoose.Schema({
+            drug_name: String,
+            menstrual_effects: [String],
+            effect_count: Number
+        }), 'menstrual_effects');
+        
+        const drug = await MenstrualEffect.findOne({ drug_name: drugName });
+        
+        if (!drug) {
+            return res.status(404).json({ error: 'Drug not found' });
+        }
+        
+        console.log(`✅ Found ${drug.effect_count} menstrual effects for ${drugName}`);
+        
+        res.json({
+            drug_name: drug.drug_name,
+            menstrual_effects: drug.menstrual_effects,
+            effect_count: drug.effect_count
+        });
+    } catch (error) {
+        console.error('Error fetching drug effects:', error);
+        res.status(500).json({ error: 'Failed to fetch drug effects' });
+    }
+});
+
+// ============================================
+// USER MEDICATION ROUTES
+// ============================================
 
 // Save user's medication and dosage
 app.post('/api/user-medications', isAuthenticated, async (req, res) => {
     try {
-        const { medication, amount, unit } = req.body;
+        const { medication, amount, unit, frequency } = req.body;  // ADD frequency
         const userId = req.session.userId;
         
         // Check if user already has this medication, update if so
@@ -228,6 +263,7 @@ app.post('/api/user-medications', isAuthenticated, async (req, res) => {
         if (existing) {
             existing.amount = amount;
             existing.unit = unit;
+            existing.frequency = frequency;  // ADD THIS LINE
             await existing.save();
             res.json({ message: 'Medication updated', data: existing });
         } else {
@@ -235,7 +271,8 @@ app.post('/api/user-medications', isAuthenticated, async (req, res) => {
                 userId,
                 medication,
                 amount,
-                unit
+                unit,
+                frequency  // ADD THIS LINE
             });
             await userMed.save();
             res.status(201).json({ message: 'Medication saved', data: userMed });
@@ -269,11 +306,70 @@ app.delete('/api/user-medications/:id', isAuthenticated, async (req, res) => {
 });
 
 // ============================================
+// NEW: MEDICATION DATABASE ENDPOINTS
+// ============================================
+
+// Get all medications from drug_database (sorted alphabetically)
+app.get('/api/medications', async (req, res) => {
+    try {
+        const drugDb = mongoose.connection.useDb('drug_database');
+        const MenstrualEffect = drugDb.model('MenstrualEffect', new mongoose.Schema({
+            drug_name: String,
+            menstrual_effects: [String],
+            effect_count: Number
+        }), 'menstrual_effects');
+        
+        const drugs = await MenstrualEffect.find({}, { drug_name: 1, _id: 0 })
+            .sort({ drug_name: 1 });
+        
+        const drugNames = drugs.map(d => d.drug_name);
+        console.log(`✅ Fetched ${drugNames.length} medications from drug_database`);
+        res.json(drugNames);
+    } catch (error) {
+        console.error('Error fetching medications:', error);
+        res.status(500).json({ error: 'Failed to fetch medications' });
+    }
+});
+
+// Get specific drug's menstrual effects
+app.get('/api/drug/:drugName', async (req, res) => {
+    try {
+        const drugName = req.params.drugName.toUpperCase();
+        
+        const drugDb = mongoose.connection.useDb('drug_database');
+        const MenstrualEffect = drugDb.model('MenstrualEffect', new mongoose.Schema({
+            drug_name: String,
+            menstrual_effects: [String],
+            effect_count: Number
+        }), 'menstrual_effects');
+        
+        const drug = await MenstrualEffect.findOne({ drug_name: drugName });
+        
+        if (!drug) {
+            return res.status(404).json({ error: 'Drug not found' });
+        }
+        
+        console.log(`✅ Found ${drug.effect_count} menstrual effects for ${drugName}`);
+        
+        res.json({
+            drug_name: drug.drug_name,
+            menstrual_effects: drug.menstrual_effects,
+            effect_count: drug.effect_count
+        });
+    } catch (error) {
+        console.error('Error fetching drug effects:', error);
+        res.status(500).json({ error: 'Failed to fetch drug effects' });
+    }
+});
+
+// ============================================
 // PYTHON BRIDGE
 // ============================================
 
 app.get('/drug_menstrual_effects', (req, res) => {
-    const pythonProcess = spawn('python', ['OpenFDA_API.py']);
+    const drugName = req.query.name;
+    // 1. Start Python with the drug name argument
+    const pythonProcess = spawn('python', ['OpenFDA_API.py', drugName]);
 
     let pythonData = "";
     let errorData = "";
